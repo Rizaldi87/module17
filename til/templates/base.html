@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Django App{% endblock %}</title>
+    {% comment %} <script defer src="https://unpkg.com/alpinejs@3.10.2/dist/cdn.min.js"></script> {% endcomment %}
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://unpkg.com/@material-tailwind/html@latest/links/dialog.js">
+    <link href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+
+    <style>
+      @import "https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css";
+
+      @layer base {
+        :root {
+          --font-display: "Roboto", sans-serif;
+        }
+      }
+    </style>
+</head>
+<body class="font-display">
+  <div class="min-h-screen flex flex-row bg-gray-100">
+      <div class="flex flex-col w-56 bg-white rounded-r-3xl overflow-hiddent">
+        <div class="flex items-center justify-center h-14 border-b">
+          {% comment %} Sidebar Navigation By iAmine {% endcomment %}
+          <div>TIL</div>
+        </div>
+        <div class="overflow-y-auto overflow-x-hidden flex-grow">
+          <ul class="flex flex-col py-4 space-y-1">
+            <li>
+              <a href="/" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                <span class="inline-flex justify-center text-lg items-center ml-4">
+                  <i class='bx bx-home'></i>
+                </span>
+                <span class="ml-2 text-sm tracking-wide truncate">Home</span>
+              </a>
+            </li>
+          {% if request.user.is_authenticated %}
+              <li>
+                  <a href="{% url "feed:new_post" %}" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6 js-toggle-modal">
+                    <span class="inline-flex justify-center text-lg items-center ml-4">
+                      <i class="bx bx-layer-plus"></i>
+                    </span>
+                    <span class="ml-2 text-sm tracking-wide truncate">New Post</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url "account_logout" %}" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                    <span class="inline-flex justify-center text-lg items-center ml-4">
+                      <i class="bx bx-log-out"></i>
+                    </span>
+                    <span class="ml-2 text-sm tracking-wide truncate">Logout</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'profiles:edit' user.username %}" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                    <span class="inline-flex justify-center text-lg items-center ml-4">
+                      <i class="bx bxs-user-detail"></i>
+                    </span>
+                    <span class="ml-2 text-sm tracking-wide truncate">Profile</span>
+                  </a>
+              </li>
+          {% else %}
+              <li>
+                  <a href="{% url "account_login" %}" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                    <span class="inline-flex justify-center text-lg items-center ml-4">
+                      <i class="bx bx-log-in"></i>
+                    </span>
+                    <span class="ml-2 text-sm tracking-wide truncate">Login</span>
+                  </a>
+              </li>
+          {% endif %}         
+          </ul>
+        </div>
+      </div>
+
+      <div class="p-16">
+          {% block body %}
+              {% block content %}{% endblock content %}
+          {% endblock body %} 
+      </div>
+
+  </div>
+
+<!-- MODAL CODE START -->
+  {% if request.user.is_authenticated %}
+    <div
+      data-dialog-backdrop="modal"
+      data-dialog-backdrop-close="true"
+      class="js-modal hidden flex items-center justify-center fixed left-0 bottom-0 w-full h-full bg-gray-100 bg-opacity-10"
+    >
+      <div
+        data-dialog="modal"
+        class="relative h-1/2 p-4 w-1/2 rounded-lg bg-white shadow-sm"
+      >
+        <div class="flex shrink-0 items-center pb-4 text-xl font-medium text-slate-800">
+          Create New Post
+        </div>
+        <div class="relative border-t border-slate-200 py-4 leading-normal text-slate-600 font-light">
+          <div class="w-full">
+            <textarea class="js-post-text border-2 border-blue-500 my-4 js-post-text w-full" placeholder="Enter Your Post" rows="3" maxlength="240" data-post-url="{% url 'feed:new_post' %}"></textarea>
+          </div>
+        </div>
+        <div class="flex shrink-0 flex-wrap items-center pt-4 justify-end gap-4">
+          <button class="js-toggle-modal my-3 border-2 border-red-600 rounded-lg px-3 py-2 text-blue-400 cursor-pointer hover:bg-blue-600 hover:text-blue-200" type="button">
+            Cancel
+          </button>
+          <button class="my-3 border-2 border-blue-600 rounded-lg px-3 py-2 text-blue-400 cursor-pointer hover:bg-blue-600 hover:text-blue-200 js-submit" type="submit">
+            Create Post
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+{% comment %} <div class="text-center mt-4">
+  <button 
+    data-dialog-target="modal"
+    class="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2" type="button">
+    Open Modal
+  </button>
+</div> {% endcomment %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

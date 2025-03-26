@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %}{{ user.username }}{% endblock title %}
+
+{% block body %}
+    <!-- component -->
+    <div class="rounded-3xl overflow-hidden shadow-xl max-w-xs my-3 bg-gray-100">
+        <img src="https://i.imgur.com/dYcYQ7E.png" class="w-full" />
+        <div class="flex justify-center -mt-8">
+            {% thumbnail user.profile.image "100x100" crop="center" as im%}
+                <img src="{{im.url}}" class="rounded-full border-solid border-white border-2 -mt-3">		
+            {% endthumbnail %}
+        </div>
+        <div class="text-center px-3 pb-6 pt-2">
+            <h2 class="text-lg bold font-sans">{{ user.username }}</h2>
+            {% if request.user.is_authenticated %}
+                {% if request.user != user %}
+                    <div>
+                        <button class="my-3 border-2 border-blue-600 rounded-lg px-3 py-2 text-blue-400 cursor-pointer hover:bg-blue-600 hover:text-blue-200 js-follow" data-username="{{user.username}}" 
+                        data-action="{% if you_follow %}unfollow{% else %}follow{% endif %}"
+                        data-url="{% url 'profiles:follow' user.username %}" type = "button">
+                            <span class="js-follow-text">
+                                {% if you_follow %}
+                                    Unfollow
+                                {% else %}
+                                    Follow
+                                {% endif %}
+                            </span>
+                        </button>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="text-small">
+                    Login to follow this user
+                </div>
+            {% endif %}
+        </div>
+        <div class="flex justify-center pb-3">
+            <div class="text-center mr-3 border-r pr-3">
+              <h2>{{ total_posts }}</h2>
+              <span>Posts</span>
+            </div>
+            <div class="text-center">
+              <h2>{{total_followers}}</h2>
+              <span>Followers</span>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

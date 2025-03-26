@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %}edit profile{% endblock title %}
+{% block content %}
+    
+<div class="bg-white rounded-md shadow-2xl p-5">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Update Profile</h2>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
+        <label class="block text-gray-700 font-bold">Username</label>
+        <input type="text" name="username" value="{{user.username}}" class="pl-2 w-full outline-none border-none" maxlength="150" autocapitalize="none" autocomplete="username" required="" aria-describedby="id_username_helptext" id="id_username">
+      </div>
+
+      <div class="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
+        <label class="block text-gray-700 font-bold">Email</label>
+        <input type="email" name="email" value="{{ user.email }}" class="pl-2 w-full outline-none border-none" maxlength="254" id="id_email">
+
+      </div>
+
+      <div class="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
+        <label class="block text-gray-700 font-bold">First Name</label>
+        <input type="text" name="first_name" value="{{user.first_name}}" class="pl-2 w-full outline-none border-none" maxlength="150" id="id_first_name">
+      </div>
+
+      <div class="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
+        <label class="block text-gray-700 font-bold">Last Name</label>
+        <input type="text" name="last_name" value="{{user.last_name}}" class="pl-2 w-full outline-none border-none" maxlength="150" id="id_last_name">
+      </div>
+
+      <div class="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
+        <label class="block text-gray-700 font-bold">New Password (Leave blank if not changing)</label>
+        <input type="password" name="password1" class="pl-2 w-full outline-none border-none" autocomplete="new-password" autofocus="" aria-describedby="id_password1_helptext" id="id_password1">
+      </div>
+
+      <label class="block text-gray-700 font-bold flex my-5 gap-5 items-center">
+          Image : 
+          <div class="flex justify-center items-center">
+              {% thumbnail user.profile.image "100x100" crop="center" as im %}
+                  <img src="{{im.url}}" class="border-solid border-black border-2 -mt-3">		
+              {% endthumbnail %}
+          </div>
+      </label>
+      <div class="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
+        <input type="file" name="image" value="{{user.profile.image }}" id="id_image" class="file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-blue-100 dark:file:bg-blue-600 dark:file:text-violet-100 dark:hover:file:bg-blue-500 ">
+        {{ profile_form.image }}
+      </div>
+
+      <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition">
+        Save Changes
+      </button>
+    </form>
+  </div>
+
+{% endblock content %}
