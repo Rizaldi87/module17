@@ -1,39 +1,68 @@
-{% extends "base.html" %}
+{% extends "account/base_entrance.html" %}
+
 {% load allauth i18n %}
-{%block title %}Sign Up{% endblock title %}
+{% block title %}
+    {% trans "Signup" %}
+{% endblock title %}
 {% block content %}
+<div class="max-w-md mx-auto mt-10 bg-white p-8 border border-gray-300 shadow-lg rounded-lg">
+    <h2 class="text-2xl font-bold text-center text-gray-700 mb-6">{% trans "Sign Up" %}</h2>
 
-<form class="bg-white rounded-md shadow-2xl p-5" method="post" action="{% url 'account_signup' %}" tags="entrance,login">
-    <h1 class="text-gray-800 font-bold text-2xl mb-1">Sign Up</h1>
-    <p class="text-sm font-normal text-gray-600 mb-8">Already have an account? Then please <a href="/login/">sign in</a>.</p>
-    {% csrf_token %}
+    <p class="mt-2 text-center text-sm text-gray-600">
+        {% trans "Already have an account?" %} 
+        <a href="{{ login_url }}" class="text-blue-500 hover:text-blue-700">{% trans "Sign in" %}</a>
+    </p>
 
-    <div class="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-        </svg>
-        <input type="email" class=" pl-2 w-full outline-none border-none" name="login" placeholder="Email address" name="email" placeholder="Email address" autocomplete="email" maxlength="320" required="" id="id_email">
-      </div>
-    <div class="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-      </svg>
-      <input type="text" class=" pl-2 w-full outline-none border-none" name="username" placeholder="Username" autocomplete="username" minlength="2" maxlength="150" required="" id="id_username">
-    </div>
-    <div class="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl ">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-      </svg>
-      <input type="password" class="pl-2 w-full outline-none border-none" name="password1" placeholder="Password" autocomplete="new-password" required="" aria-describedby="id_password1_helptext" id="id_password1">
-    </div>
-    <div class="flex items-center border-2 mb-12 py-2 px-3 rounded-2xl ">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-      </svg>
-      <input type="password" class="pl-2 w-full outline-none border-none" name="password2" placeholder="Password (again)" autocomplete="new-password" required="" id="id_password2">
+    {% if not SOCIALACCOUNT_ONLY %}
+        <form method="post" action="{% url 'account_signup' %}" class="space-y-4">
+            {% csrf_token %}
 
-    </div>
+            <div>
+                <label for="{{ form.username.id_for_label }}" class="block text-gray-700 font-semibold">{% trans "Username" %}</label>
+                <input type="text" name="username" id="{{ form.username.id_for_label }}" 
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                    placeholder="Enter your username">
+            </div>
 
-    <button type="submit" class="block w-full bg-indigo-600 mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2">Sign Up</button>
-</form>
-{% endblock content %}
+            <div>
+                <label for="{{ form.email.id_for_label }}" class="block text-gray-700 font-semibold">{% trans "Email" %}</label>
+                <input type="email" name="email" id="{{ form.email.id_for_label }}" 
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                    placeholder="Enter your email">
+            </div>
+
+            <div>
+                <label for="{{ form.password1.id_for_label }}" class="block text-gray-700 font-semibold">{% trans "Password" %}</label>
+                <input type="password" name="password1" id="{{ form.password1.id_for_label }}" 
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                    placeholder="Enter your password">
+            </div>
+
+            <div>
+                <label for="{{ form.password2.id_for_label }}" class="block text-gray-700 font-semibold">{% trans "Confirm Password" %}</label>
+                <input type="password" name="password2" id="{{ form.password2.id_for_label }}" 
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                    placeholder="Confirm your password">
+            </div>
+
+            {{ redirect_field }}
+
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">
+                {% trans "Sign Up" %}
+            </button>
+        </form>
+    {% endif %}
+
+    {% if PASSKEY_SIGNUP_ENABLED %}
+        <hr class="my-6">
+        <a href="{{ signup_by_passkey_url }}" class="block text-center w-full border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white py-2 px-4 rounded-lg">
+            {% trans "Sign up using a passkey" %}
+        </a>
+    {% endif %}
+
+    {% if SOCIALACCOUNT_ENABLED %}
+        <hr class="my-6">
+        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+    {% endif %}
+</div>
+{% endblock %}
